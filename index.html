@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Calculator</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+margin: 0;
+background: #faf8ef;
+}
+.calculator {
+border: 1px solid #888;
+border-radius: 5px;
+padding: 10px;
+background: #fff;
+}
+.display {
+width: 210px;
+margin-bottom: 10px;
+font-size: 32px;
+border: 1px solid #888;
+padding: 5px;
+text-align: right;
+border-radius: 5px;
+}
+button {
+height: 50px;
+width: 50px;
+font-size: 24px;
+margin: 5px;
+cursor: pointer;
+border-radius: 5px;
+}
+button:active {
+transform: scale(0.98);
+}
+.operations button {
+background-color: #f0ad4e;
+color: white;
+}
+</style>
+</head>
+<body>
+
+<div class="calculator">
+<div class="display" id="display">0</div>
+<div class="digits operations">
+<button onclick="press('1')">1</button>
+<button onclick="press('2')">2</button>
+<button onclick="press('3')">3</button>
+<button onclick="setOperation('+')">+</button>
+</div>
+<div class="digits operations">
+<button onclick="press('4')">4</button>
+<button onclick="press('5')">5</button>
+<button onclick="press('6')">6</button>
+<button onclick="setOperation('-')">-</button>
+</div>
+<div class="digits operations">
+<button onclick="press('7')">7</button>
+<button onclick="press('8')">8</button>
+<button onclick="press('9')">9</button>
+<button onclick="setOperation('*')">*</button>
+</div>
+<div class="digits operations">
+<button onclick="clearDisplay()">C</button>
+<button onclick="press('0')">0</button>
+<button onclick="calculateResult()">=</button>
+<button onclick="setOperation('/')">/</button>
+</div>
+</div>
+
+<script>
+let displayValue = '0';
+let firstOperand = null;
+let secondOperand = false;
+let currentOperation = null;
+
+function updateDisplay() {
+document.getElementById('display').innerText = displayValue;
+}
+
+function press(digit) {
+if (secondOperand) {
+displayValue = digit;
+secondOperand = false;
+} else {
+displayValue = displayValue === '0' ? digit : displayValue + digit;
+}
+updateDisplay();
+}
+
+function setOperation(operator) {
+if (currentOperation !== null) calculateResult();
+firstOperand = displayValue;
+currentOperation = operator;
+secondOperand = true;
+}
+
+function calculateResult() {
+if (currentOperation === null || secondOperand) return;
+let result;
+let prev = parseFloat(firstOperand);
+let current = parseFloat(displayValue);
+switch (currentOperation) {
+case '+':
+result = prev + current;
+break;
+case '-':
+result = prev - current;
+break;
+case '*':
+result = prev * current;
+break;
+case '/':
+if (current !== 0) {
+result = prev / current;
+} else {
+alert("You cannot divide by zero!");
+return;
+}
+break;
+default:
+return;
+}
+displayValue = result.toString();
+currentOperation = null;
+secondOperand = true;
+updateDisplay();
+}
+
+function clearDisplay() {
+displayValue = '0';
+firstOperand = null;
+secondOperand = false;
+currentOperation = null;
+updateDisplay();
+}
+
+updateDisplay();
+</script>
+</body>
+</html>
